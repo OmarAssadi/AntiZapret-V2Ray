@@ -1,0 +1,65 @@
+{
+  "log": {
+    "loglevel": "debug"
+  },
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "domainMatcher": "mph",
+        "domains": [
+          "ext:antizapret.dat:ZAPRETINFO"
+        ],
+        "outboundTag": "allow"
+      },
+      {
+        "type": "field",
+        "port": "0-65535",
+        "network": "tcp,udp",
+        "protocol": [
+          "http",
+          "tls",
+          "bittorrent"
+        ],
+        "outboundTag": "deny"
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "port": 10000,
+      "listen": "127.0.0.1",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "9d0a470f-aaac-46df-96f4-3e2b16963d39",
+            "alterId": 0,
+            "security": "auto",
+            "level": 0
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/ray"
+        }
+      },
+      "tag": "default"
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "deny"
+    },
+    {
+      "protocol": "freedom",
+      "settings": {},
+      "tag": "allow"
+    }
+  ]
+}

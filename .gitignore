@@ -1,0 +1,17 @@
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.dat
+*.iws
+*.iml
+*.ipr
+go.work
+vendor/
+Godeps/
+z-i/
+publish/
+.idea

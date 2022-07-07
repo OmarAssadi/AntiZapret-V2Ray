@@ -1,0 +1,101 @@
+{
+  "log": {
+    "loglevel": "debug"
+  },
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "domainMatcher": "mph",
+        "domains": [
+          "ext:antizapret.dat:ZAPRETINFO"
+        ],
+        "outboundTag": "allow"
+      },
+      {
+        "type": "field",
+        "port": "0-65535",
+        "network": "tcp,udp",
+        "protocol": [
+          "http",
+          "tls",
+          "bittorrent"
+        ],
+        "outboundTag": "deny"
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "port": 49152,
+      "listen": "0.0.0.0",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "9d0a470f-aaac-46df-96f4-3e2b16963d39",
+            "alterId": 0,
+            "security": "auto",
+            "level": 0
+          }
+        ],
+        "detour": {
+          "to": "dynamicPort"
+        }
+      },
+      "streamSettings": {
+        "network": "mkcp",
+        "kcpSettings": {
+          "congestion": true,
+          "header": {
+            "type": "utp"
+          }
+        }
+      },
+      "tag": "default"
+    },
+    {
+      "port": "49153-65534",
+      "listen": "0.0.0.0",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "9d0a470f-aaac-46df-96f4-3e2b16963d39",
+            "alterId": 0,
+            "security": "auto",
+            "level": 0
+          }
+        ]
+      },
+      "allocate": {
+        "strategy": "random",
+        "concurrency": 2,
+        "refresh": 3
+      },
+      "streamSettings": {
+        "network": "mkcp",
+        "kcpSettings": {
+          "congestion": true,
+          "header": {
+            "type": "utp"
+          }
+        }
+      },
+      "tag": "dynamicPort"
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "deny"
+    },
+    {
+      "protocol": "freedom",
+      "settings": {},
+      "tag": "allow"
+    }
+  ]
+}
